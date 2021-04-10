@@ -4,4 +4,6 @@
     <string name="top_rated">Top Rated</string>
     <string name="pop">Popular</string>
     <string name="upcom">Upcoming</string>
+    <string name="search_hint">Search...</string>
+    <string name="search">search</string>
 </resources>
