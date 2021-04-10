@@ -30,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recycler;
     ProgressDialog pDialog;
     private String TAG = MainActivity.class.getSimpleName();
+    private static String url = "https://api.themoviedb.org/3/movie/upcoming?api_key=402eb03154f33ed947a8852a65b92f16&language=en-US"; //upcoming
+    private static String url2 = "https://api.themoviedb.org/3/movie/top_rated?api_key=dd16bfdacacfdc28592b1efb50d4db1e&language=en-US"; //top_rated
+    private static String url3 = "https://api.themoviedb.org/3/movie/popular?api_key=dd16bfdacacfdc28592b1efb50d4db1e&language=en-US"; //popular
 
 
 
