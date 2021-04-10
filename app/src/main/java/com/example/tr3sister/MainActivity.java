@@ -2,27 +2,47 @@ package com.example.tr3sister;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ListAdapter;
 import android.widget.SearchView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
+    RecyclerView recycler;
+    ProgressDialog pDialog;
+    private String TAG = MainActivity.class.getSimpleName();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
+        recycler = findViewById(R.id.recycler);
+
+
+        BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -129,10 +149,10 @@ public class MainActivity extends AppCompatActivity {
             if (pDialog.isShowing())
                 pDialog.dismiss();
 
-            ListAdapter adapter = new SimpleAdapter(MainActivity.this, filmlist, R.layout.list_item,
-                    new String[]{"vote_average","title", "overview", "release_date","backdrop_path"}, new int[]{R.id.vote_average,R.id.title,R.id.overview, R.id.release_date,R.id.image});
+            ListAdapter adapter = new SimpleAdapter(MainActivity.this, filmlist, R.layout.cardfilm,
+                    new String[]{"vote_average","title", "overview", "release_date","backdrop_path"}, new int[]{R.id.title,R.id.title,R.id.rating,R.id.image});
 
-            lv.setAdapter(adapter);
+            recycler.setAdapter((RecyclerView.Adapter) adapter);
         }
 
     }
