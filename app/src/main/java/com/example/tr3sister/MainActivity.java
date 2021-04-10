@@ -2,6 +2,8 @@ package com.example.tr3sister;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
@@ -9,13 +11,10 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ListAdapter;
 import android.widget.SearchView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -24,25 +23,29 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity {
+
+    List<MovieModel> filmlist;
     RecyclerView recycler;
-    ProgressDialog pDialog;
     private String TAG = MainActivity.class.getSimpleName();
     private static String url = "https://api.themoviedb.org/3/movie/upcoming?api_key=402eb03154f33ed947a8852a65b92f16&language=en-US"; //upcoming
     private static String url2 = "https://api.themoviedb.org/3/movie/top_rated?api_key=dd16bfdacacfdc28592b1efb50d4db1e&language=en-US"; //top_rated
     private static String url3 = "https://api.themoviedb.org/3/movie/popular?api_key=dd16bfdacacfdc28592b1efb50d4db1e&language=en-US"; //popular
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-        recycler = findViewById(R.id.recycler);
 
 
         BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -51,114 +54,105 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.page_top_rated:
-
-                        Toast.makeText(MainActivity.this, "Top Rated", Toast.LENGTH_SHORT).show();
+                        filmlist = new ArrayList<>();
+                        recycler = findViewById(R.id.recycler);
+                        new GetJSON().execute(url2);
                         break;
                     case R.id.page_popular:
-                        Toast.makeText(MainActivity.this, "Popular", Toast.LENGTH_SHORT).show();
+                        filmlist = new ArrayList<>();
+                        recycler = findViewById(R.id.recycler);
+                        new GetJSON().execute(url3);
                         break;
                     case R.id.page_upcoming:
-                        Toast.makeText(MainActivity.this, "Upcoming", Toast.LENGTH_SHORT).show();
+                        filmlist = new ArrayList<>();
+                        recycler = findViewById(R.id.recycler);
+                        new GetJSON().execute(url);
                         break;
                 }
+
                 return true;
             }
         });
-        new GetJSON().execute();
+        bottomNav.setSelectedItemId(R.id.page_popular);
+        filmlist = new ArrayList<>();
+        recycler = findViewById(R.id.recycler);
+        new GetJSON().execute(url3);
     }
-    private class GetJSON extends AsyncTask<Void, Void, Void> {
+    private class GetJSON extends AsyncTask<String, String, String> {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // Showing progress dialog
-            pDialog = new ProgressDialog(MainActivity.this);
-            pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
-            pDialog.show();
+        protected String doInBackground(String... arg0) {
+            String js = arg0[0];
+            String result = "";
 
+            try{
+                URL url;
+                HttpsURLConnection urlConnection = null;
+
+                try{
+                    url = new URL(js);
+                    urlConnection = (HttpsURLConnection) url.openConnection();
+
+                    InputStream is = urlConnection.getInputStream();
+                    InputStreamReader isr = new InputStreamReader(is);
+
+                    int data = isr.read();
+                    while(data != -1){
+                        result += (char) data;
+                        data = isr.read();
+                    }
+                    return result;
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    if(urlConnection != null){
+                        urlConnection.disconnect();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return result;
         }
 
         @Override
-        protected Void doInBackground(Void... arg0) {
-            HttpHandler sh = new HttpHandler();
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
 
-            // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(url);
+            try{
+                JSONObject jsonObject = new JSONObject(result);
+                JSONArray jsonArray = jsonObject.getJSONArray("results");
 
-            Log.e(TAG, "Response from url: " + jsonStr);
+                for(int i =0;i<jsonArray.length();i++){
+                JSONObject newjsonObject = jsonArray.getJSONObject(i);
 
-            if (jsonStr != null) {
-                try {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
+                MovieModel model = new MovieModel();
+                model.setRating(newjsonObject.getString("vote_average"));
+                model.setTitle(newjsonObject.getString("title"));
+                model.setImg(newjsonObject.getString("poster_path"));
 
-                    JSONArray results = jsonObj.getJSONArray("results");
-
-                    for (int i = 0; i < results.length(); i++) {
-                        JSONObject c = results.getJSONObject(i);
-
-                        String title = "Title : "+c.getString("title");
-                        String overview = c.getString("overview");
-                        String release_date = "Release Date : "+c.getString("release_date");
-                        float vote = Float.parseFloat(c.getString("vote_average"));
-                        String vote_average = "Vote Average : "+String.valueOf(vote);
-                        String image = c.getString("backdrop_path");
-
-                        HashMap<String, String> result = new HashMap<>();
-
-                        result.put("title", title);
-                        result.put("overview", overview);
-                        result.put("release_date", release_date);
-                        result.put("vote_average", vote_average);
-                        result.put("backdrop_path", image);
-                        filmlist.add(result);
-
-                    }
-
-                } catch (final JSONException e) {
-                    Log.e(TAG, "Json parsing error: " + e.getMessage());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    "Json parsing error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG)
-                                    .show();
-                        }
-                    });
+                filmlist.add(model);
 
                 }
-            } else {
-                Log.e(TAG, "Couldn't get json from server.");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),
-                                "Couldn't get json from server. Check LogCat for possible errors!",
-                                Toast.LENGTH_LONG)
-                                .show();
-                    }
-                });
-
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            // Dismiss the progress dialog
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-
-            ListAdapter adapter = new SimpleAdapter(MainActivity.this, filmlist, R.layout.cardfilm,
-                    new String[]{"vote_average","title", "overview", "release_date","backdrop_path"}, new int[]{R.id.title,R.id.title,R.id.rating,R.id.image});
-
-            recycler.setAdapter((RecyclerView.Adapter) adapter);
+            putDataIntoRecyclerView(filmlist);
         }
 
     }
+
+    private void putDataIntoRecyclerView(List<MovieModel>filmlist) {
+        CustomAdapter adapter = new CustomAdapter(this,filmlist);
+        RecyclerView.LayoutManager layout = new GridLayoutManager(this,3);
+        recycler.setLayoutManager(layout);
+        recycler.setAdapter(adapter);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

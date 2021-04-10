@@ -31,7 +31,7 @@
         android:layout_below="@id/title"
         android:layout_toRightOf="@id/starrate"
         android:text="10"
-         />
+        />
     <ImageView
         android:id="@+id/starrate"
         android:layout_width="16dp"
@@ -45,6 +45,6 @@
         android:layout_height="130dp"
         android:id="@+id/poster"
         android:src="@color/black"
-         />
+        />
 
 </RelativeLayout>
