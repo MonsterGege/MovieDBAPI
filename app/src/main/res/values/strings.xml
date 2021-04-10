@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TR3Sister</string>
+
+    <string name="top_rated">Top Rated</string>
+    <string name="pop">Popular</string>
+    <string name="upcom">Upcoming</string>
 </resources>

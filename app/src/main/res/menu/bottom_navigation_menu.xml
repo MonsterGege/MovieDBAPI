@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/page_top_rated"
+        android:enabled="true"
+        android:icon="@drawable/thumbsup"
+        android:title="@string/top_rated"/>
+    <item
+        android:id="@+id/page_popular"
+        android:enabled="true"
+        android:icon="@drawable/star"
+        android:title="@string/pop"/>
+    <item
+        android:id="@+id/page_upcoming"
+        android:enabled="true"
+        android:icon="@drawable/upcoming"
+        android:title="@string/upcom"/>
+</menu>
