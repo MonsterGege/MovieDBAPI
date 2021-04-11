@@ -24,7 +24,10 @@
 
     <SearchView
         android:id="@+id/search_menu"
-        android:layout_margin="20dp"
+        android:layout_marginTop="20dp"
+        android:background="#F1F1F1"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
