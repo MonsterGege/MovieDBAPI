@@ -11,6 +11,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +19,8 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     List<MovieModel> filmlist;
     RecyclerView recycler;
     SearchView sv;
+    ImageSlider IS;
+
     private String TAG = MainActivity.class.getSimpleName();
     private static String url = "https://api.themoviedb.org/3/movie/upcoming?api_key=402eb03154f33ed947a8852a65b92f16&language=en-US"; //upcoming
     private static String url2 = "https://api.themoviedb.org/3/movie/top_rated?api_key=dd16bfdacacfdc28592b1efb50d4db1e&language=en-US"; //top_rated
@@ -49,6 +54,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        IS = findViewById(R.id.slider);
+
+        List<SlideModel> SM = new ArrayList<>();
+
+        SM.add(new SlideModel("https://image.tmdb.org/t/p/w500/xMIyotorUv2Yz7zpQz2QYc8wkWB.jpg","The Green Mile"));
+        SM.add(new SlideModel("https://image.tmdb.org/t/p/w500/inJjDhCjfhh3RtrJWBmmDqeuSYC.jpg","Godzilla vs. Kong"));
+        SM.add(new SlideModel("https://image.tmdb.org/t/p/w500/z8TvnEVRenMSTemxYZwLGqFofgF.jpg","Monster Hunter"));
+        SM.add(new SlideModel("https://image.tmdb.org/t/p/w500/rSPw7tgCH9c6NqICZef4kZjFOQ5.jpg","The Godfather"));
+        IS.setImageList(SM,true);
+
         sv = findViewById(R.id.search_menu);
         sv.setQueryHint(getResources().getString(R.string.search_hint));
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -58,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 filmlist = new ArrayList<>();
                 recycler = findViewById(R.id.recycler);
                 new GetJSON().execute(urlsearch);
+                sv.clearFocus();
                 return true;
             }
 
@@ -65,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
+
         });
 
 
@@ -156,7 +173,8 @@ public class MainActivity extends AppCompatActivity {
                 model.setRating(newjsonObject.getString("vote_average"));
                 model.setTitle(newjsonObject.getString("title"));
                 model.setImg(newjsonObject.getString("poster_path"));
-
+                model.setOverview(newjsonObject.getString("overview"));
+                model.setRelease_date(newjsonObject.getString("release_date"));
                 filmlist.add(model);
 
                 }

@@ -8,11 +8,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
-        android:layout_margin="20dp"
-        android:layout_below="@id/search_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:layout_below="@id/search_menu"
+        android:layout_marginTop="230dp"
+        android:layout_marginBottom="20dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -24,14 +24,23 @@
 
     <SearchView
         android:id="@+id/search_menu"
-        android:layout_marginTop="20dp"
-        android:background="#F1F1F1"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
+        android:supportsRtl="true"
+        android:layoutDirection="rtl"
+        android:layout_margin="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-
-
+    <com.denzcoskun.imageslider.ImageSlider
+        android:id="@+id/slider"
+        android:layout_width="match_parent"
+        app:auto_cycle="true"
+        app:delay="0"
+        app:period="2000"
+        app:placeholder="@drawable/logo"
+        app:error_image="@drawable/logo"
+        android:layout_height="210dp"
+        android:layout_marginTop="90dp"
+        app:corner_radius="5"
+        />
 
 </RelativeLayout>

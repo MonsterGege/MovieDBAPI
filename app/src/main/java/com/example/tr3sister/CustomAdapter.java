@@ -2,6 +2,7 @@ package com.example.tr3sister;
 
 import android.content.Context;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         Glide.with(context)
                 .load("https://image.tmdb.org/t/p/w500"+filmlist.get(position).img)
                 .into(holder.path);
+
+        holder.path.setOnClickListener(view -> {
+            Intent intent = new Intent(context,detail.class);
+            intent.putExtra("img",filmlist.get(position).getImg());
+            intent.putExtra("title",filmlist.get(position).getTitle());
+            intent.putExtra("rating",filmlist.get(position).getRating());
+            intent.putExtra("release_date",filmlist.get(position).getRelease_date());
+            intent.putExtra("overview",filmlist.get(position).getOverview());
+            context.startActivity(intent);
+        });
+
     }
 
     @Override
