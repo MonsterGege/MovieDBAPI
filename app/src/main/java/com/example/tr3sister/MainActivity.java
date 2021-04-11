@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     List<MovieModel> filmlist;
     RecyclerView recycler;
+    SearchView sv;
     private String TAG = MainActivity.class.getSimpleName();
     private static String url = "https://api.themoviedb.org/3/movie/upcoming?api_key=402eb03154f33ed947a8852a65b92f16&language=en-US"; //upcoming
     private static String url2 = "https://api.themoviedb.org/3/movie/top_rated?api_key=dd16bfdacacfdc28592b1efb50d4db1e&language=en-US"; //top_rated
@@ -46,6 +48,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sv = findViewById(R.id.search_menu);
+        sv.setQueryHint(getResources().getString(R.string.search_hint));
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                String urlsearch = "https://api.themoviedb.org/3/search/movie?api_key=402eb03154f33ed947a8852a65b92f16&language=en-US&query="+query+"&include_adult=false";
+                filmlist = new ArrayList<>();
+                recycler = findViewById(R.id.recycler);
+                new GetJSON().execute(urlsearch);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+
 
 
         BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
@@ -77,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         filmlist = new ArrayList<>();
         recycler = findViewById(R.id.recycler);
         new GetJSON().execute(url3);
+
     }
     private class GetJSON extends AsyncTask<String, String, String> {
 
@@ -153,31 +176,5 @@ public class MainActivity extends AppCompatActivity {
         recycler.setAdapter(adapter);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
 
-        SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        if (sm != null) {
-            SearchView sv = (SearchView) (menu.findItem(R.id.search)).getActionView();
-            sv.setSearchableInfo(sm.getSearchableInfo(getComponentName()));
-            sv.setQueryHint(getResources().getString(R.string.search_hint));
-            sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    //cari nya diapain masukin ke sini
-                    Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    return false;
-                }
-
-            });
-        }
-        return true;
-    }
 }

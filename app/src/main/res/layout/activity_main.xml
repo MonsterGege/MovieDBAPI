@@ -9,6 +9,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_margin="20dp"
+        android:layout_below="@id/search_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
@@ -20,6 +21,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_navigation_menu" />
+
+    <SearchView
+        android:id="@+id/search_menu"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 
 
