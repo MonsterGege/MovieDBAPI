@@ -2,13 +2,14 @@ package com.example.tr3sister;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-public class detail extends AppCompatActivity {
+public class detail extends Activity {
 
     ImageView dposter;
     TextView dtitle, drelease, doverview, drate;
