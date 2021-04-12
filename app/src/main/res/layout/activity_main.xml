@@ -10,8 +10,8 @@
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/search_menu"
-        android:layout_marginTop="230dp"
+        android:layout_below="@id/container"
+        android:layout_marginTop="200dp"
         android:layout_marginBottom="20dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -22,13 +22,34 @@
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_navigation_menu" />
 
-    <SearchView
-        android:id="@+id/search_menu"
-        android:supportsRtl="true"
-        android:layoutDirection="rtl"
-        android:layout_margin="20dp"
+
+    <LinearLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="40dp"
+            android:src="@drawable/logo"
+            />
+        <SearchView
+            android:id="@+id/search_menu"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:layoutDirection="rtl"
+            android:supportsRtl="true" />
+    </LinearLayout>
+
 
     <com.denzcoskun.imageslider.ImageSlider
         android:id="@+id/slider"
